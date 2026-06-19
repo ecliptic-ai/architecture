@@ -16,7 +16,7 @@ EMEA Practice Solutions Lead, Application Platform
 
 Principal Platform Engineer, John Lewis Partnership
 
-**Editor's note:** This is part one of the story. After you’re finished reading, head over to [part two](https://cloud.google.com/blog/products/application-development/simplifying-platform-engineering-at-john-lewis-part-two). 
+**Editor's note:** This is part one of the story. After you’re finished reading, head over to [part two](https://cloud.google.com/blog/products/application-development/simplifying-platform-engineering-at-john-lewis-part-two).
 
 ---
 
@@ -24,9 +24,9 @@ In 2017, John Lewis, a major UK retailer with a £2.5bn annual online turnover, 
 
 The John Lewis engineers knew there was a better way. Working with Google Cloud, they modernized their e-commerce operations with [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine). They started with the frontend, and started to see results fast: the frontend was moved onto Google Cloud in mere months, releases to the frontend browser journey started to happen weekly, and the business gladly backed expansion into other areas.
 
-At the same time, the team had a broader strategy in mind: to take [a platform engineering approach](https://cloud.google.com/solutions/platform-engineering), creating many product teams who built their own microservices to replace the functionality of the legacy commerce engine, as well as creating brand new experiences for customers. 
+At the same time, the team had a broader strategy in mind: to take [a platform engineering approach](https://cloud.google.com/solutions/platform-engineering), creating many product teams who built their own microservices to replace the functionality of the legacy commerce engine, as well as creating brand new experiences for customers.
 
-And so The John Lewis Digital Platform was born. The vision was to empower development teams and arm them with the tools and processes they needed to go to market fast, with full ownership of their own business services. The team’s motto? "You Build It. You Run It. You Own It." This decentralization of development and operational responsibilities would also enable the team to scale. 
+And so The John Lewis Digital Platform was born. The vision was to empower development teams and arm them with the tools and processes they needed to go to market fast, with full ownership of their own business services. The team’s motto? "You Build It. You Run It. You Own It." This decentralization of development and operational responsibilities would also enable the team to scale.
 
 This article features insights from Principal Platform Engineer Alex Moss, who delves into their strategy, platform build, and key learnings of John Lewis’ journey to modernize and streamline its operations with platform engineering — so you can begin to think about how you might apply platform engineering to your own organization.
 
@@ -40,13 +40,13 @@ Start building with $300 in free credits for new customers. All customers get fr
 
 In order to make this happen, John Lewis needed to adopt a multi-tenant architecture — one tenant for each business service, allowing each owning team to work independently without risk to others -- and thereby permitting the Platform team to give the team a greater degree of freedom.
 
-Knowing that the business' primary objective was to greatly increase the number of product teams helped inform our initial design thinking, positioning ourselves to enable many independent teams even though we only had a handful of tenants. 
+Knowing that the business' primary objective was to greatly increase the number of product teams helped inform our initial design thinking, positioning ourselves to enable many independent teams even though we only had a handful of tenants.
 
 This foundational design has served us very well and is largely unchanged now, seven years later. Central to the multi-tenant concept is what we chose to term a "Service" — a logical business application, usually composed of several microservices plus components for storing data.
 
 We largely position our platform as a “bring your own container” experience, but encourage teams to make use of other Google Cloud services — particularly for handling state. Adopting services like Firestore and Pub/Sub reduces the complexity that our platform team has to work with, particularly for areas like resilience and disaster recovery. We also favor Kubernetes over compute products like Cloud Run because it strikes the right balance for us between enabling development teams to have freedom whilst allowing our platform to drive certain certain behaviours, e.g., the right level of guardrails, without introducing too much friction.
 
-On our platform, Product Teams (i.e., tenants) have a large amount of control over their own Namespaces and Projects. This allows them to prototype, build, and ultimately operate, their workloads without dependency on others — a crucial element of enabling scale. 
+On our platform, Product Teams (i.e., tenants) have a large amount of control over their own Namespaces and Projects. This allows them to prototype, build, and ultimately operate, their workloads without dependency on others — a crucial element of enabling scale.
 
 Our early-adopter teams were extremely helpful in helping evolve the platform; they were accepting of the lack of features and willing to develop their own solutions, and provided very rich feedback on whether we were building something that met their needs.
 
@@ -54,13 +54,13 @@ The first tenant to adopt the platform was rebuilding the [johnlewis.com](http:/
 
 ### **All roads lead to success**
 
-A risk with a platform that allows very high team autonomy is that it can turn into a bit of a wild-west of technology choices and implementation patterns. To handle this, but to do so in a way that remained developer-centric, we adopted the concept of a **paved road,**  analogous to a “golden path.” 
+A risk with a platform that allows very high team autonomy is that it can turn into a bit of a wild-west of technology choices and implementation patterns. To handle this, but to do so in a way that remained developer-centric, we adopted the concept of a **paved road,** analogous to a “golden path.”
 
 We found that the paved road approach made it easier to:
 
-* build useful platform features to help developers do things rapidly and safely
-* share approaches and techniques, and engineers to move between teams
-* demonstrate to the wider organisation that teams are following required practices (which we do by building assurance capabilities, **not** by gating release)
+- build useful platform features to help developers do things rapidly and safely
+- share approaches and techniques, and engineers to move between teams
+- demonstrate to the wider organisation that teams are following required practices (which we do by building assurance capabilities, **not** by gating release)
 
 The concept of the paved road permeates most of what the platform builds, and has inspired other areas of the John Lewis Partnership beyond the John Lewis Digital space.
 
@@ -73,9 +73,9 @@ Whilst both features were created with the developer experience in mind, we disc
 
 The Paved Road Pipeline is driven by a configuration file — in yaml (of course!) — which we call the Service Definition. This allows **the team that owns the tenancy** to describe, through easy-to-reason-about configuration, what they would like the platform to provide for them. Supporting documentation and examples help them understand what can be achieved. Pushes to this file then drive a CI/CD pipeline for a number of platform-owned jobs, which we refer to as provisioners. These provisioners are microservices-like themselves in that they are independently releasable and generally focus on performing one task well. Here are some examples of our provisioners and what they can do:
 
-* Create Google Cloud resources in a tenant’s Project. For example, [Buckets](https://cloud.google.com/storage/docs/creating-buckets), [PubSub](https://cloud.google.com/pubsub/docs/overview), and [Firestore](https://firebase.google.com/docs/firestore) — amongst many others
-* Configure platform-provided dashboards and custom dashboards based on golden-signal and self-instrumented metrics
-* Tune alert configurations for a given microservice’s SLOs, and the incident response behaviour for those alerts
+- Create Google Cloud resources in a tenant’s Project. For example, [Buckets](https://cloud.google.com/storage/docs/creating-buckets), [PubSub](https://cloud.google.com/pubsub/docs/overview), and [Firestore](https://firebase.google.com/docs/firestore) — amongst many others
+- Configure platform-provided dashboards and custom dashboards based on golden-signal and self-instrumented metrics
+- Tune alert configurations for a given microservice’s SLOs, and the incident response behaviour for those alerts
 
 Our product teams are therefore freed from the need to familiarize themselves deeply with how Google Cloud resource provisioning works, or Infrastructure-as-Code (IaC) tooling for that matter. Our preferred technologies and good practices can be curated by our experts, and developers can focus on building differentiating software for the business, while remaining fully in control of what is provisioned and when.
 
@@ -85,7 +85,7 @@ We think this approach is also more scalable than providing pre-built Terraform 
 
 Adopting this approach also results in a broad consistency in technologies across our platform. For example, why would a team implement Kafka when the platform makes creating resources in Pub/Sub so easy? When you consider that this spans not just the runtime components that assemble into a working business service, but also all the ancillary needs for operating that software — resilience engineering, monitoring & alerting, incident response, security tooling, service management, and so on— this has a massive amplifying effect on our engineers’ productivity. All of these areas have full paved road capabilities on the John Lewis Digital Platform, reducing the cognitive load for teams in recognizing the need for, identifying appropriate options, and then implementing technology or processes to use them.
 
-That being said, one of the reasons we particularly like the paved road concept is because it doesn't preclude teams choosing to "go off-road." A paved road shouldn’t be mandatory, but it should be compelling to use, so that engineers aren’t tempted to do something else. Preventing use of other approaches risks stifling innovation and the temptation to think the features you've built are "good enough." The paved road challenges our Platform Engineers to keep improving their product so that it continues to meet our Developers' changing needs. Likewise, development teams tempted to go off-road are put off by the increasing burden of replicating powerful platform features. 
+That being said, one of the reasons we particularly like the paved road concept is because it doesn't preclude teams choosing to "go off-road." A paved road shouldn’t be mandatory, but it should be compelling to use, so that engineers aren’t tempted to do something else. Preventing use of other approaches risks stifling innovation and the temptation to think the features you've built are "good enough." The paved road challenges our Platform Engineers to keep improving their product so that it continues to meet our Developers' changing needs. Likewise, development teams tempted to go off-road are put off by the increasing burden of replicating powerful platform features.
 
 The needs of our Engineers don’t remain fixed, and Google Cloud are of course releasing new capabilities all the time, so we have extended the analogy to include a “dusty path” representing brand new platform features that aren’t as feature-rich as we’d like (perhaps they lack self-service provisioning or out-the-box observability). Teams are trusted to try different options and make use of Google Cloud products that we haven't yet paved. The Paved Road Pipeline allows for this experimentation - what we term "snowflaking". We then have an unofficial "rule of three", whereby if we notice at least 3 teams requesting the same feature, we move to make the use of it self-service.
 

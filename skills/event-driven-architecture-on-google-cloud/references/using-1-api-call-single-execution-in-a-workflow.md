@@ -28,7 +28,7 @@ Imagine you have an online store and you’re using Workflows to create new orde
 
 A new customer order comes in, the website makes an API call to Workflows but receives an error. Two possible scenarios are:
 
- (1) The request is lost and the workflow is never invoked:
+(1) The request is lost and the workflow is never invoked:
 
 (2) The workflow is invoked and executes successfully, however the response is lost:
 
@@ -52,7 +52,7 @@ Let’s see what happens when the workflow uses a Cloud Function to process the 
 
 By default, Workflows offers **at-most-once** delivery (no retries) with HTTP requests. That’s usually OK because 99.9+% of the time, the call is successful, and a response is received.
 
-In the rare case of failure, a [ConnectionError](https://cloud.google.com/workflows/docs/reference/syntax/error-types#error-tags) might be raised. As in the website-to-workflow situation discussed previously, the workflow can’t tell which scenario occurred. Similarly, you can add retries. 
+In the rare case of failure, a [ConnectionError](https://cloud.google.com/workflows/docs/reference/syntax/error-types#error-tags) might be raised. As in the website-to-workflow situation discussed previously, the workflow can’t tell which scenario occurred. Similarly, you can add retries.
 
 Let’s add a [default retry policy](https://cloud.google.com/workflows/docs/reference/syntax/retrying#default-retry-policy) to handle this:
 
@@ -60,7 +60,7 @@ Let’s add a [default retry policy](https://cloud.google.com/workflows/docs/ref
 - processPayment: try: call: http.post args: url: https://us-central1-<your_project_id>.cloudfunctions.net/processpayment auth: type: OIDC retry: ${http.default_retry} # Retries up to 5 times, includes 'ConnectionError'
 ```
 
-Let's say the second delivery scenario occurs where the request is received by the Cloud Function but the response is lost. By adding retries, Workflows will likely invoke the Cloud Function multiple times. When this happens, how do you ensure that the code in the Cloud Function only runs once? 
+Let's say the second delivery scenario occurs where the request is received by the Cloud Function but the response is lost. By adding retries, Workflows will likely invoke the Cloud Function multiple times. When this happens, how do you ensure that the code in the Cloud Function only runs once?
 
 You’ll need to add extra logic to the Cloud Function to check and update the payment state in Firestore:
 
@@ -85,10 +85,15 @@ const functions = require('@google-cloud/functions-framework'); const firestore 
 `package.json`
 
 ```json
-{ "dependencies": { "@google-cloud/functions-framework": "^3.3.0", "@google-cloud/firestore": "^7.6.0" } }
+{
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0",
+    "@google-cloud/firestore": "^7.6.0"
+  }
+}
 ```
 
-The key takeaway is that all payment processing work occurs within a **transaction**, making all actions idempotent. The code within the transaction might run multiple times due to Workflows retries, but it’s only committed once. 
+The key takeaway is that all payment processing work occurs within a **transaction**, making all actions idempotent. The code within the transaction might run multiple times due to Workflows retries, but it’s only committed once.
 
 ## **What about HTTP callbacks, Pub/Sub, Cloud Tasks?**
 
@@ -104,13 +109,13 @@ The good news is that Workflows HTTP callbacks are fully idempotent by default. 
 
 Let’s assume that the first callback returns an error to the external caller. Based on the error, the caller might not know if the workflow callback was received, and should retry the callback. On the second callback, the caller will receive one of the following HTTP status codes:
 
-* **429** indicates that the first callback was received successfully. The second callback is rejected by the workflow.
-* **200** indicates that the second callback was received successfully. The first callback was either never received, or was received and processed successfully. If the latter, the second callback is not processed because `await_callback `is called only once. The second callback is discarded at the end of the workflow.
-* **404** indicates that a callback is not available. Either the first callback was received and processed and the workflow has completed, or the workflow is not running (and has failed, for example). To confirm this, you’ll need to send an API request to query the workflow execution state.
+- **429** indicates that the first callback was received successfully. The second callback is rejected by the workflow.
+- **200** indicates that the second callback was received successfully. The first callback was either never received, or was received and processed successfully. If the latter, the second callback is not processed because `await_callback `is called only once. The second callback is discarded at the end of the workflow.
+- **404** indicates that a callback is not available. Either the first callback was received and processed and the workflow has completed, or the workflow is not running (and has failed, for example). To confirm this, you’ll need to send an API request to query the workflow execution state.
 
 For more details, see [Invoke a workflow exactly once using callbacks](https://cloud.google.com/workflows/docs/creating-callback-endpoints#invoke-once).
 
-### **Pub/Sub messages** 
+### **Pub/Sub messages**
 
 When using Pub/Sub to [trigger](https://cloud.google.com/workflows/docs/trigger-workflow-eventarc) a new workflow execution, Pub/Sub uses **at-least-once** delivery with Workflows, and will retry on any delivery failure. Pub/Sub messages are automatically deduplicated. You don’t need to worry about duplicate deliveries in that time window (24 hours).
 

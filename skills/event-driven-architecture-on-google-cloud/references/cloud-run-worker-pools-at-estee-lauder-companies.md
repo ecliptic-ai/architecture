@@ -18,7 +18,7 @@ Engineering Manager
 
 Cloud Run has long provided developers with a straightforward, opinionated platform for running code. You can easily deploy request-driven web applications using Cloud Run services, or execute run-to-completion batch processing with Cloud Run jobs. However, as developers build more complex applications, like pipelines that process continuous streams of data or distributed AI workloads, they need an environment designed for continuous, background execution.
 
-Estée Lauder Companies got just that with [Cloud Run worker pools](https://docs.cloud.google.com/run/docs/deploy-worker-pools), which transform Cloud Run from a platform for web workloads and background tasks, to a platform for pull-based workloads. Cloud Run worker pools are now generally available. 
+Estée Lauder Companies got just that with [Cloud Run worker pools](https://docs.cloud.google.com/run/docs/deploy-worker-pools), which transform Cloud Run from a platform for web workloads and background tasks, to a platform for pull-based workloads. Cloud Run worker pools are now generally available.
 
 Estee Lauder Companies’ Rostrum platform is a polymorphic chat service for LLM-powered applications that originally ran as a standalone Cloud Run service. While the simple architecture worked for internal tools with predictable traffic, the team faced a major hurdle of the upcoming holiday shopping season for consumer-facing traffic. To launch their first consumer-facing generative AI application, [Jo Malone London’s AI Scent Advisor](https://www.jomalone.com/ai-scent-advisor), they needed an architecture that would sustain the load of AI prompts from thousands of simultaneous users.
 
@@ -26,9 +26,9 @@ In just a few weeks, Estee Lauder Companies migrated to a producer-consumer mode
 
 By decoupling the user-facing web tier from LLM operations, Estee Lauder Companies achieved:
 
-* **100% message durability:** Pub/sub acts as a buffer such that even during holiday spikes, no user message is lost.
-* **Strong UI latency SLAs:** Server-side rendering is decoupled from message processing load.
-* **Minimal operations overhead:** The team spent virtually no time managing servers, allowing them to focus on the user experience rather than infrastructure.
+- **100% message durability:** Pub/sub acts as a buffer such that even during holiday spikes, no user message is lost.
+- **Strong UI latency SLAs:** Server-side rendering is decoupled from message processing load.
+- **Minimal operations overhead:** The team spent virtually no time managing servers, allowing them to focus on the user experience rather than infrastructure.
 
 This modular architecture now serves as the blueprint for Estee Lauder Companies to rapidly launch specialized AI advisors across its diverse house of brands.
 
@@ -42,8 +42,8 @@ Unlike Cloud Run services, worker pools are designed for workloads requiring non
 
 With the GA of worker pools, Cloud Run supports major new categories of workloads:
 
-* **Pull-based workloads:** Worker pools provide a reliable environment for running and scaling workloads that continuously pull messages from queues like Pub/Sub, [Kafka](https://cloud.google.com/blog/products/serverless/exploring-cloud-run-worker-pools-and-kafka-autoscaler?e=48754805), Github Runners or Redis task queues.
-* **Distributed AI/ML workloads:** Worker pools are a great fit for distributed LLM training or fine-tuning workloads. At GA, worker pools support NVIDIA L4 and RTX PRO 6000 (Blackwell) GPUs.
+- **Pull-based workloads:** Worker pools provide a reliable environment for running and scaling workloads that continuously pull messages from queues like Pub/Sub, [Kafka](https://cloud.google.com/blog/products/serverless/exploring-cloud-run-worker-pools-and-kafka-autoscaler?e=48754805), Github Runners or Redis task queues.
+- **Distributed AI/ML workloads:** Worker pools are a great fit for distributed LLM training or fine-tuning workloads. At GA, worker pools support NVIDIA L4 and RTX PRO 6000 (Blackwell) GPUs.
 
 One of the most significant advantages of this new offering is its cost-efficiency, as worker pools can be approximately 40% cheaper than request-driven Services or Jobs for long-running background tasks.
 
@@ -67,6 +67,6 @@ You can deploy your first worker pool today by referring to the [documentation](
 
 To implement high-performance distributed workloads using Cloud Run worker pools and External Metrics Autoscaling (CREMA), you can refer to the below examples for the use case of your choice.
 
-* [Autoscale Worker Pools with Pub/Sub pull subscription](https://docs.cloud.google.com/run/docs/tutorials/autoscale-workerpools-pubsub)
-* [Run and scale self-hosted GitHub runners](https://docs.cloud.google.com/run/docs/tutorials/github-runner)
-* [Autoscale Worker pools based on custom Prometheus metrics](https://docs.cloud.google.com/run/docs/tutorials/autoscale-workerpools-prometheus)
+- [Autoscale Worker Pools with Pub/Sub pull subscription](https://docs.cloud.google.com/run/docs/tutorials/autoscale-workerpools-pubsub)
+- [Run and scale self-hosted GitHub runners](https://docs.cloud.google.com/run/docs/tutorials/github-runner)
+- [Autoscale Worker pools based on custom Prometheus metrics](https://docs.cloud.google.com/run/docs/tutorials/autoscale-workerpools-prometheus)

@@ -14,9 +14,9 @@ Staff Software Engineer
 
 Enterprise architects often face a fundamental dilemma: choosing between developer agility and organizational control. Development teams need to move fast and deploy independent microservices without waiting for permission. Security and compliance teams need to be safe, and ensure that data flow is observable and governed by policies.
 
-That’s why we built [**Eventarc Advanced**](https://docs.cloud.google.com/eventarc/advanced/docs/overview)**,** a serverless eventing platform and the evolution of [**Eventarc Standard**](https://docs.cloud.google.com/eventarc/standard/docs/overview). Eventarc Advanced providesan improved architectural pattern for the modern cloud, where **centralized policy meets distributed logic**. By clearly separating the governance layer (the "bus") from the processing layer (the "pipeline"), Eventarc Advanced gives SecOps teams the visibility and control they demand, while freeing developers to choreograph AI agents and build event-driven applications with the autonomy they want. [Eventarc Advanced became generally available](https://cloud.google.com/blog/products/application-modernization/eventarc-advanced-orchestrates-complex-microservices-environments?e=48754805) in August 2025\. 
+That’s why we built [**Eventarc Advanced**](https://docs.cloud.google.com/eventarc/advanced/docs/overview)**,** a serverless eventing platform and the evolution of [**Eventarc Standard**](https://docs.cloud.google.com/eventarc/standard/docs/overview). Eventarc Advanced providesan improved architectural pattern for the modern cloud, where **centralized policy meets distributed logic**. By clearly separating the governance layer (the "bus") from the processing layer (the "pipeline"), Eventarc Advanced gives SecOps teams the visibility and control they demand, while freeing developers to choreograph AI agents and build event-driven applications with the autonomy they want. [Eventarc Advanced became generally available](https://cloud.google.com/blog/products/application-modernization/eventarc-advanced-orchestrates-complex-microservices-environments?e=48754805) in August 2025\.
 
-In this blog, we take a deeper look at the evolution of integration architectures — from service buses, to microservices, to where we are today — and go into depth with a real-world example. Let’s jump in. 
+In this blog, we take a deeper look at the evolution of integration architectures — from service buses, to microservices, to where we are today — and go into depth with a real-world example. Let’s jump in.
 
 ### **The evolution of integration architectures**
 
@@ -36,9 +36,9 @@ To address this, the industry shifted toward **microservices** (often described 
 
 However, as architectures shifted to **Event-Driven Architecture (EDA)** for greater resilience and decoupling, a new gap emerged. In a distributed, asynchronous world, centralized control often vanished. This created a **governance gap** where SecOps teams struggled to maintain order. Three issues emerged to the forefront:
 
-* **The visibility void**: Without a central policy, shadow IT services could silently subscribe to sensitive events without detection.
-* **The policy problem**: Enforcing data residency or PII masking is nearly impossible when the broker treats every message as an opaque blob.
-* **The dependency risk**: Without clear contracts, changing an event schema risks silently breaking unknown downstream consumers.
+- **The visibility void**: Without a central policy, shadow IT services could silently subscribe to sensitive events without detection.
+- **The policy problem**: Enforcing data residency or PII masking is nearly impossible when the broker treats every message as an opaque blob.
+- **The dependency risk**: Without clear contracts, changing an event schema risks silently breaking unknown downstream consumers.
 
 ### A new pattern: Centralized policy, distributed logic
 
@@ -46,8 +46,8 @@ Eventarc Advanced addresses the trade-off between control and speed with a novel
 
 Eventarc Advanced maps these distinct responsibilities to two specific architectural resources that each correspond to a distinct role:
 
-* **The** **bus:** This governance layer is a managed, centralized hub where platform administrators enforce global constraints before events are routed. It synthesizes the centralized routing of the legacy ESB with the modern security architecture of a service mesh. It handles Identity and Access Management (IAM), including content-based access control, to strictly define who can publish, and integrates with [VPC Service Controls](https://docs.cloud.google.com/vpc-service-controls/docs/overview) to prevent data exfiltration.
-* **The pipeline:** Think of this distributed, team-owned resource as developers’ integration logic layer. This is where eventing patterns for AI agents and microservices are unlocked, allowing developers to configure event flow and delivery according to their specific business logic. Unlike many service meshes that treat data as opaque bits, the pipeline understands content. Developers can transform events, convert payloads between formats (like JSON to Avro), and configure retry policies and authentication independently.
+- **The** **bus:** This governance layer is a managed, centralized hub where platform administrators enforce global constraints before events are routed. It synthesizes the centralized routing of the legacy ESB with the modern security architecture of a service mesh. It handles Identity and Access Management (IAM), including content-based access control, to strictly define who can publish, and integrates with [VPC Service Controls](https://docs.cloud.google.com/vpc-service-controls/docs/overview) to prevent data exfiltration.
+- **The pipeline:** Think of this distributed, team-owned resource as developers’ integration logic layer. This is where eventing patterns for AI agents and microservices are unlocked, allowing developers to configure event flow and delivery according to their specific business logic. Unlike many service meshes that treat data as opaque bits, the pipeline understands content. Developers can transform events, convert payloads between formats (like JSON to Avro), and configure retry policies and authentication independently.
 
 In other words, by decoupling these duties, Eventarc Advanced provides the control of an ESB with the agility of microservices and the resilience of modern event-driven architectures.
 
@@ -57,28 +57,28 @@ A typical Eventarc Advanced solution can be implemented with minimal configurati
 
 Imagine an ecosystem at a global retailer with four autonomous teams in charge of the following services:
 
-* **Commerce**
-* **Finance**
-* **Logistics**
-* **Intelligence (AI Insights Agent)**
+- **Commerce**
+- **Finance**
+- **Logistics**
+- **Intelligence (AI Insights Agent)**
 
 In a traditional setup, aligning these teams is difficult. The Intelligence team wants access to everything for their models, Finance wants to lock everything down for compliance, Logistics just needs a stable schema to ship boxes, and Commerce needs to roll out new features at a moment’s notice.
 
 **The foundation: Built on CloudEvents**
 
-Eventarc Advanced uses a data model based on the open [CloudEvents standard](https://cloudevents.io/), which can carry any type of payload. This helps ensure governance and discoverability while retaining flexibility. In our example, before a single event is published, the platform administrator mandates that every message must contain standard attributes and a specific custom extension for governance. 
+Eventarc Advanced uses a data model based on the open [CloudEvents standard](https://cloudevents.io/), which can carry any type of payload. This helps ensure governance and discoverability while retaining flexibility. In our example, before a single event is published, the platform administrator mandates that every message must contain standard attributes and a specific custom extension for governance.
 
 In this example, every event on the bus must carry the following attributes:
 
-* `type`: Standard identifiers for the event instance (e.g., `com.retail.order.created`)
-* `source`: A standard attribute identifying the producer (e.g., `//commerce/frontend`)
-* `data_sensitivity`: A custom extension attribute to categorize risk
+- `type`: Standard identifiers for the event instance (e.g., `com.retail.order.created`)
+- `source`: A standard attribute identifying the producer (e.g., `//commerce/frontend`)
+- `data_sensitivity`: A custom extension attribute to categorize risk
 
 In addition, the organization defines three data sensitivity levels:
 
-* `restricted` **(High)**: Severe risk data like Credit Card Tokens or Tax IDs
-* `confidential` **(Medium)**: PII like home addresses
-* `general` **(Low)**: Safe operational data like Order IDs
+- `restricted` **(High)**: Severe risk data like Credit Card Tokens or Tax IDs
+- `confidential` **(Medium)**: PII like home addresses
+- `general` **(Low)**: Safe operational data like Order IDs
 
 This standardized metadata layer allows the bus to enforce policies based on specific attribute names — checking who sent the data (`source`) and what kind of data it is (`data_sensitivity`).
 
@@ -118,7 +118,20 @@ The Logistics team decides to upgrade their warehouse robots to use high-efficie
 A typical `com.retail.payment.success` event from Finance arrives as JSON:
 
 ```json
-{ "id": "89d5663e-789e-4d9f-a65f-f7d83742d987", "source": "//finance/ledger", "type": "com.retail.payment.success", "data_sensitivity": "general", "datacontenttype": "application/json", "data": { "order_number": "ORD-2023-8841", "total_amount": 249.99, "currency": "USD", "transaction_id": "tx_77382910", "status": "SETTLED" } }
+{
+  "id": "89d5663e-789e-4d9f-a65f-f7d83742d987",
+  "source": "//finance/ledger",
+  "type": "com.retail.payment.success",
+  "data_sensitivity": "general",
+  "datacontenttype": "application/json",
+  "data": {
+    "order_number": "ORD-2023-8841",
+    "total_amount": 249.99,
+    "currency": "USD",
+    "transaction_id": "tx_77382910",
+    "status": "SETTLED"
+  }
+}
 ```
 
 The warehouse robots service expects a binary Protobuf message:
@@ -135,7 +148,7 @@ The Logistics team configures their pipeline to accept `json` as input and outpu
 
 This transformation not only maps the input but also applies business logic — calculating the insured value and normalizing the currency code. The Logistics team implements this modernization without a single meeting with the Finance team.
 
-**Agentic workflows: Filtering and triggering AI agents** 
+**Agentic workflows: Filtering and triggering AI agents**
 
 Eventarc Advanced enables agentic workflows by allowing pipelines to communicate directly with AI agents using open standard protocols like [Agent2Agent (A2A)](https://github.com/a2aproject/A2A) and [Model Context Protocol (MCP)](https://modelcontextprotocol.io/), while also offering rich capabilities like filtering to optimize when those agents are invoked.
 
@@ -161,7 +174,7 @@ This combination of filtering and agentic protocol translation ensures that AI r
 
 When a shipment is ready, the Logistics team uses a pipeline to send an SMS using a legacy gateway API. Integrating with legacy third-party APIs often requires writing "glue code" services just to format requests.
 
-The Logistics team eliminates this maintenance burden by configuring a dedicated pipeline to fully construct the exact request expected by the legacy service. 
+The Logistics team eliminates this maintenance burden by configuring a dedicated pipeline to fully construct the exact request expected by the legacy service.
 
 They use a **HTTP Message Destination Binding** CEL expression, which standardizes the phone number and maps it to the `X-SMS-To` HTTP header required by the API. It also construct the SMS text:
 
@@ -175,8 +188,8 @@ Finally, they configure a robust retry policy (linear backoff, max five attempts
 
 Eventarc Advanced closes an important gap in event-driven architectures: It brings the same level of maturity to asynchronous communication by introducing the pattern of **centralized policy, distributed logic**.
 
-* **For the Platform team**, Eventarc Advanced provides assurance that a bus can strictly enforce integrity and confidentiality on every message, bringing "service-mesh-like" security to the event layer.
-* **For the developer**, it restores autonomy. The pipeline allows teams to filter, transform, convert, and route events to fit their specific needs, enabling them to treat events as first-class products rather than opaque artifacts.
+- **For the Platform team**, Eventarc Advanced provides assurance that a bus can strictly enforce integrity and confidentiality on every message, bringing "service-mesh-like" security to the event layer.
+- **For the developer**, it restores autonomy. The pipeline allows teams to filter, transform, convert, and route events to fit their specific needs, enabling them to treat events as first-class products rather than opaque artifacts.
 
 This architecture lays the foundation for the next generation of intelligent applications. A secure, typed, and trustworthy event mesh can serve as the backbone for generative AI agents and real-time analytics, allowing you to safely expose business context to the systems that need it most.
 
@@ -184,7 +197,7 @@ This architecture lays the foundation for the next generation of intelligent app
 
 Don't let governance slow down your innovation. Here are some Eventarc Advanced resources to get you on your way:
 
-* **Learn more:** Dive into the full capabilities of the Bus and Pipeline in the [Eventarc Advanced documentation](https://cloud.google.com/eventarc/docs).
-* **Get hands-on:** Deploy the "Retail Event Mesh" scenario yourself and explore enterprise patterns with our [Quickstarts and Tutorials](https://cloud.google.com/eventarc/docs/quickstarts).
-* **Start building:** Go to the [Google Cloud console](https://console.cloud.google.com/eventarc) to configure your first bus and pipeline today.
-* **Let's talk:** Have a complex enterprise use case? [Contact Google Cloud Sales](https://cloud.google.com/contact) to discuss how Eventarc Advanced fits into your broader integration strategy.
+- **Learn more:** Dive into the full capabilities of the Bus and Pipeline in the [Eventarc Advanced documentation](https://cloud.google.com/eventarc/docs).
+- **Get hands-on:** Deploy the "Retail Event Mesh" scenario yourself and explore enterprise patterns with our [Quickstarts and Tutorials](https://cloud.google.com/eventarc/docs/quickstarts).
+- **Start building:** Go to the [Google Cloud console](https://console.cloud.google.com/eventarc) to configure your first bus and pipeline today.
+- **Let's talk:** Have a complex enterprise use case? [Contact Google Cloud Sales](https://cloud.google.com/contact) to discuss how Eventarc Advanced fits into your broader integration strategy.
