@@ -1,6 +1,6 @@
 - [build-ai-agents-faster-with-gcs-google-cloud-storage-mcp-server](build-ai-agents-faster-with-gcs-google-cloud-storage-mcp-server.md)
 - [cloud-run-worker-pools-at-estee-lauder-companies](cloud-run-worker-pools-at-estee-lauder-companies.md)
-- [containers-kubernetes:gke-inference-gateway-prefix-caching-accelerates-ai-inference](containers-kubernetes:gke-inference-gateway-prefix-caching-accelerates-ai-inference.md)
+- [containers-kubernetes-gke-inference-gateway-prefix-caching-accelerates-ai-inference](containers-kubernetes-gke-inference-gateway-prefix-caching-accelerates-ai-inference.md)
 - [eventarc-advanced-orchestrates-complex-microservices-environments](eventarc-advanced-orchestrates-complex-microservices-environments.md)
 - [firebase-studio-lets-you-build-full-stack-ai-apps-with-gemini](firebase-studio-lets-you-build-full-stack-ai-apps-with-gemini.md)
 - [firestore-eventarc-integration-now-ga-with-auth-context](firestore-eventarc-integration-now-ga-with-auth-context.md)
