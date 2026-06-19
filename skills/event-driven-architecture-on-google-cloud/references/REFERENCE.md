@@ -9,7 +9,6 @@
 - [grpc-as-a-native-transport-for-mcp](grpc-as-a-native-transport-for-mcp.md)
 - [guide-to-gemini-enterprise-and-a2ui-integration](guide-to-gemini-enterprise-and-a2ui-integration.md)
 - [how-glance-turns-hours-of-video-into-mobile-ready-clips-with-ai](how-glance-turns-hours-of-video-into-mobile-ready-clips-with-ai.md)
-- [how-to-build-ai-agents-with-google-managed-mcp-servers](how-to-build-ai-agents-with-google-managed-mcp-servers.md)
 - [simplifying-platform-engineering-at-john-lewis-part-one](simplifying-platform-engineering-at-john-lewis-part-one.md)
 - [simplifying-platform-engineering-at-john-lewis-part-two](simplifying-platform-engineering-at-john-lewis-part-two.md)
 - [using-1-api-call-single-execution-in-a-workflow](using-1-api-call-single-execution-in-a-workflow.md)
